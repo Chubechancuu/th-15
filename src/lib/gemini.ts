@@ -1,4 +1,4 @@
-import { GoogleGenerativeAI } from "@google/genai";
+import * as GenAI from "@google/genai";
 
 // 1. Lấy API Key an toàn
 const getApiKey = () => {
@@ -6,13 +6,14 @@ const getApiKey = () => {
   return (key && typeof key === 'string') ? key.trim() : "";
 };
 
-const genAI = new GoogleGenerativeAI(getApiKey() || "NO_KEY");
+// 2. Khởi tạo AI theo cách tương thích với Vercel Build
+const API_KEY = getApiKey();
+const genAI = API_KEY ? new (GenAI as any).GoogleGenerativeAI(API_KEY) : null;
 
-// 2. Hàm xử lý chung (Trái tim của hệ thống)
+// 3. Hàm xử lý chung
 async function callAI(payload: any) {
   try {
-    const key = getApiKey();
-    if (!key) return "⚠️ Vui lòng cấu hình VITE_GEMINI_API_KEY trên Vercel.";
+    if (!genAI) return "⚠️ Vui lòng cấu hình VITE_GEMINI_API_KEY trên Vercel.";
 
     const model = genAI.getGenerativeModel({ 
       model: "gemini-1.5-flash",
@@ -33,7 +34,7 @@ async function callAI(payload: any) {
   }
 }
 
-// 3. Xuất các hàm cho Giao diện sử dụng
+// 4. Các hàm cho Giao diện
 export const solveProblem = async (image: string, mode: string = "General") => {
   const content = [
     `Bạn là chuyên gia. Hãy giải bài tập này thật chi tiết. Chế độ: ${mode}`,
@@ -55,10 +56,7 @@ export const getSocraticResponse = async (msg: string, history: any[]) => {
   });
 };
 
-export const generatePathway = async (goal: string) => 
-  callAI({ content: `Tạo lộ trình học tập cho: ${goal}` });
-
-// Các hàm bổ trợ khác (đảm bảo không trắng màn hình)
+export const generatePathway = async (goal: string) => callAI({ content: `Tạo lộ trình học tập cho: ${goal}` });
 export const generateSyncQuestion = async () => "";
 export const generateConversationSummary = async () => "";
 export const generateExample = async () => "";
