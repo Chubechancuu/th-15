@@ -1,9 +1,8 @@
-// Sửa lại cách import để khớp với thư viện @google/genai của bạn
-import * as GenAI từ "@google/genai";
+import * as GenAI from "@google/genai";
 
 const API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
 
-// Cách khởi tạo riêng của thư viện @google/genai
+// Cách khởi tạo an toàn nhất cho thư viện @google/genai
 const genAI = new (GenAI as any).GoogleGenerativeAI(API_KEY || "");
 
 async function callAI(payload: any) {
@@ -29,7 +28,7 @@ async function callAI(payload: any) {
   }
 }
 
-// --- CÁC HÀM BÊN DƯỚI GIỮ NGUYÊN ---
+// --- GIỮ NGUYÊN CÁC HÀM CŨ ---
 export async function getSocraticResponse(message: string, history: any[], level: string = "Trung bình", language: string = "Tiếng Việt", aiTone: string = "Friendly") {
   const systemInstruction = `You are a master Socratic Tutor. NEVER give direct answers. ALWAYS ask guiding questions. Language: ${language}.`;
   const contents = history.map(h => ({
@@ -51,6 +50,7 @@ export async function generateConversationSummary(history: any[], language: stri
   return callAI({ prompt: `Tóm tắt nội dung: ${JSON.stringify(history)}. Ngôn ngữ: ${language}.` });
 }
 
+// Các hàm bổ trợ
 export async function generateExample() { return ""; }
 export async function generateQuizQuestion() { return ""; }
 export async function generateExercise() { return ""; }
