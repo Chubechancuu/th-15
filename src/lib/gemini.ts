@@ -1,4 +1,4 @@
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import { GoogleGenerativeAI } from "@google/genai";
 
 // 1. Kết nối với chìa khóa API bạn đã dán trên Vercel
 const API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
