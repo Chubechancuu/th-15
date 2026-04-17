@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { solveProblem, getSocraticResponse } from '../lib/gemini';
 import { motion, AnimatePresence } from 'motion/react';
 import { 
   Sparkles, 
